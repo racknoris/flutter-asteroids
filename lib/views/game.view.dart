@@ -23,9 +23,12 @@ class _GameViewState extends State<GameView> {
   Loc _playerLoc;
   double _speed;
 
+  Map<LogicalKeyboardKey, bool> _keysDown;
+
   @override
   void initState() {
     super.initState();
+    _keysDown = {};
     _requestedFocus = false;
     _focusNode = FocusNode(
         descendantsAreFocusable: true,
@@ -35,7 +38,7 @@ class _GameViewState extends State<GameView> {
         });
 
     _playerLoc = Loc(0, 0);
-    _speed = 10;
+    _speed = 7;
   }
 
   @override
@@ -46,20 +49,11 @@ class _GameViewState extends State<GameView> {
           print("[RawKeyboardListener] event: $event");
 
           if (event is RawKeyDownEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.keyA) {
-              _playerLoc.x -= _speed;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.keyD) {
-              _playerLoc.x += _speed;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.keyW) {
-              _playerLoc.y -= _speed;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.keyS) {
-              _playerLoc.y += _speed;
-            }
+            _keysDown[event.logicalKey] = true;
           }
-          setState(() {});
+          if (event is RawKeyUpEvent) {
+            _keysDown[event.logicalKey] = false;
+          }
         },
         focusNode: _focusNode,
         child: LayoutBuilder(
@@ -68,6 +62,13 @@ class _GameViewState extends State<GameView> {
               _requestedFocus = true;
               FocusScope.of(context).requestFocus(_focusNode);
             }
+
+            _handleKeys();
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {});
+            });
+
             return Container(
               color: Colors.grey.shade300,
               // alignment: Alignment.center,
@@ -85,10 +86,26 @@ class _GameViewState extends State<GameView> {
             );
           },
         ),
-        //  Center(
-        //   child: Player(),
-        // ),
       ),
     );
+  }
+
+  void _handleKeys() {
+    if (_keysDown[LogicalKeyboardKey.keyR] == true) {
+      _playerLoc = Loc(0, 0);
+    }
+
+    if (_keysDown[LogicalKeyboardKey.keyA] == true) {
+      _playerLoc.x -= _speed;
+    }
+    if (_keysDown[LogicalKeyboardKey.keyD] == true) {
+      _playerLoc.x += _speed;
+    }
+    if (_keysDown[LogicalKeyboardKey.keyW] == true) {
+      _playerLoc.y -= _speed;
+    }
+    if (_keysDown[LogicalKeyboardKey.keyS] == true) {
+      _playerLoc.y += _speed;
+    }
   }
 }
