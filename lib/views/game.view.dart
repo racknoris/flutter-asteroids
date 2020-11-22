@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_asteroids/shared/common.dart';
 import 'package:flutter_asteroids/shared/player.dart';
 
 class Loc {
@@ -95,17 +96,25 @@ class _GameViewState extends State<GameView> {
       _playerLoc = Loc(0, 0);
     }
 
-    if (_keysDown[LogicalKeyboardKey.keyA] == true) {
+    if (_keysDown[LogicalKeyboardKey.keyZ] == true) {
       _playerLoc.x -= _speed;
     }
-    if (_keysDown[LogicalKeyboardKey.keyD] == true) {
+    if (_keysDown[LogicalKeyboardKey.keyC] == true) {
       _playerLoc.x += _speed;
     }
-    if (_keysDown[LogicalKeyboardKey.keyW] == true) {
+    if (_keysDown[LogicalKeyboardKey.keyS] == true) {
       _playerLoc.y -= _speed;
     }
-    if (_keysDown[LogicalKeyboardKey.keyS] == true) {
+    if (_keysDown[LogicalKeyboardKey.keyX] == true) {
       _playerLoc.y += _speed;
     }
+
+    // apply bounderies:
+    if (_playerLoc.x < 0) _playerLoc.x = 0;
+    if (_playerLoc.y < 0) _playerLoc.y = 0;
+    if (_playerLoc.x > MediaQuery.of(context).size.width - Common.PLAYER_SIZE)
+      _playerLoc.x = MediaQuery.of(context).size.width - Common.PLAYER_SIZE;
+    if (_playerLoc.y > MediaQuery.of(context).size.height - Common.PLAYER_SIZE)
+      _playerLoc.y = MediaQuery.of(context).size.height - Common.PLAYER_SIZE;
   }
 }

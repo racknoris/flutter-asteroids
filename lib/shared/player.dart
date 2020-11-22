@@ -11,8 +11,8 @@ class _PlayerState extends State<Player> {
   Widget build(BuildContext context) {
     return Container(
       color: Common.PLAYER_1,
-      width: 65,
-      height: 65,
+      width: Common.PLAYER_SIZE,
+      height: Common.PLAYER_SIZE,
     );
   }
 }
